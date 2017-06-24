@@ -1,3 +1,10 @@
+#eclipse stuff
+.cproject
+.project
+.settings/
+
+Debug/
+
 # Prerequisites
 *.d
 

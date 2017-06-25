@@ -31,6 +31,7 @@ namespace TP2
 	void Graphe::resize(size_t nouvelleTaille){
 		noms.resize(nouvelleTaille);
 		listesAdj.resize(nouvelleTaille);
+		nbSommets = nouvelleTaille;
 		ASSERTION(noms.size()==nouvelleTaille && listesAdj.size() == nouvelleTaille);
 	}
 

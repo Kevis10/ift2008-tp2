@@ -28,6 +28,9 @@ namespace TP2
 
 	}
 
+	void ReseauInterurbain::resize(size_t nouvelleTailles){
+		unReseau.resize(nouvelleTailles);
+	}
 
 	Chemin ReseauInterurbain::rechercheCheminDijkstra(const std::string & source, const std::string & destination, bool dureeCout) const {
 		Chemin compile_pls;

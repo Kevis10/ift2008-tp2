@@ -64,6 +64,8 @@ namespace TP2
 	*/
 	Chemin ReseauInterurbain::rechercheCheminDijkstra(const std::string & source, const std::string & destination, bool dureeCout) const {
 		Chemin plus_court_chemin;
+		plus_court_chemin.coutTotal = 0;
+		plus_court_chemin.dureeTotale= 0;
 		plus_court_chemin.reussi = false;
 
 		std::vector<int> precedents(unReseau.getNombreSommets());
@@ -92,6 +94,7 @@ namespace TP2
 				}
 			}
 
+			//on trouve la prochaine ville a explorer
 			a_visiter.erase(std::remove(a_visiter.begin(), a_visiter.end(), actual_node), a_visiter.end());
 			visite[actual_node] = true;
 			float poids_a_battre = 1e6;
@@ -102,6 +105,7 @@ namespace TP2
 				}
 			}
 
+			//si on a atteint notre but
 			if(actual_node==final_node){
 				std::vector<size_t> chemin_inverse;
 				chemin_inverse.push_back(actual_node);
@@ -110,9 +114,15 @@ namespace TP2
 					actual_node = precedents[actual_node];
 				}while( actual_node != initial_node );
 				std::reverse(chemin_inverse.begin(),chemin_inverse.end());
-				for(auto numero_ville : chemin_inverse){
-					plus_court_chemin.listeVilles.push_back(unReseau.getNomSommet(numero_ville));
+				for(size_t index=0; index<chemin_inverse.size();index++){
+					if(index>0){
+						plus_court_chemin.dureeTotale += getAmountToTravel(chemin_inverse[index-1],chemin_inverse[index],true);
+						plus_court_chemin.coutTotal+= getAmountToTravel(chemin_inverse[index-1],chemin_inverse[index],false);
+
+					}
+					plus_court_chemin.listeVilles.push_back(unReseau.getNomSommet(chemin_inverse[index]));
 				}
+
 				plus_court_chemin.reussi = true;
 				return plus_court_chemin;
 

@@ -63,10 +63,82 @@ namespace TP2
 	* \param[in] dureeCout vrai si pondere par duree, faux si pondere par cout
 	*/
 	Chemin ReseauInterurbain::rechercheCheminDijkstra(const std::string & source, const std::string & destination, bool dureeCout) const {
-		Chemin compile_pls;
-		return compile_pls;
+		Chemin plus_court_chemin;
+		plus_court_chemin.reussi = false;
+
+		std::vector<int> precedents(unReseau.getNombreSommets());
+		std::vector<int> visite(unReseau.getNombreSommets(),false);
+		std::vector<int> decouvert(unReseau.getNombreSommets(),false);
+		std::vector<float> poids(unReseau.getNombreSommets(),1e6);
+		std::vector<int> a_visiter;
+
+		size_t initial_node = unReseau.getNumeroSommet(source);
+		size_t actual_node = initial_node;
+		size_t final_node =  unReseau.getNumeroSommet(destination);
+		poids[actual_node] = 0.;
+		a_visiter.push_back(actual_node);
+		while(a_visiter.size()>0){
+			//explore les points
+			for(auto fin_arc: unReseau.listerSommetsAdjacents(actual_node)){
+				//mise a jour temptative des poids
+				float amount_to_travel = getAmountToTravel(actual_node, fin_arc, dureeCout);
+				if(poids[fin_arc] > poids[actual_node]+amount_to_travel){
+					poids[fin_arc]=poids[actual_node]+amount_to_travel;
+					precedents[fin_arc] = actual_node;
+				}
+				if(!visite[fin_arc] and !decouvert[fin_arc]){
+					decouvert[fin_arc] = true;
+					a_visiter.push_back(fin_arc);
+				}
+			}
+
+			a_visiter.erase(std::remove(a_visiter.begin(), a_visiter.end(), actual_node), a_visiter.end());
+			visite[actual_node] = true;
+			float poids_a_battre = 1e6;
+			for(auto arc: a_visiter){
+				if(poids[arc]<poids_a_battre){
+					poids_a_battre =poids[arc];
+					actual_node = arc;
+				}
+			}
+
+			if(actual_node==final_node){
+				std::vector<size_t> chemin_inverse;
+				chemin_inverse.push_back(actual_node);
+				do {
+					chemin_inverse.push_back(precedents[actual_node]);
+					actual_node = precedents[actual_node];
+				}while( actual_node != initial_node );
+				std::reverse(chemin_inverse.begin(),chemin_inverse.end());
+				for(auto numero_ville : chemin_inverse){
+					plus_court_chemin.listeVilles.push_back(unReseau.getNomSommet(numero_ville));
+				}
+				plus_court_chemin.reussi = true;
+				return plus_court_chemin;
+
+			}
+
+
+
+		}
+
+
+		return plus_court_chemin;
 	}
 
+
+	float ReseauInterurbain::getAmountToTravel(size_t source, size_t destination, bool dureeCout) const{
+
+		Ponderations poids = unReseau.getPonderationsArc(source,destination);
+		float a_ajouter;
+
+		if(dureeCout){
+			return poids.duree;
+		}else{
+			return poids.cout;
+		}
+
+	}
 
 	/**
 	* \brief Retourne les composantes fortement connexes d'un reseau

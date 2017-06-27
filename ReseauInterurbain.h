@@ -16,6 +16,7 @@
 #include <climits>
 #include <vector>
 #include <stack>
+#include <queue>
 #include <list>
 //vous pouvez inclure d'autres librairies de la STL si vous pensez les utiliser
 
@@ -75,7 +76,7 @@ public:
 	std::vector<size_t> _parcoursProfondeur(size_t source, std::vector<bool> & visite, bool reverse) const;
 	std::vector<size_t> _parcoursCompletProfondeur() const;
 	std::vector<size_t> _parcours(size_t source, std::stack<size_t> & container, std::vector<bool> & visite, bool reverse) const;
-
+	float getAmountToTravel(size_t source, size_t destination, bool dureeCout) const;
 
 
 private:

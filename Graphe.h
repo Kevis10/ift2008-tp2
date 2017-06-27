@@ -101,6 +101,7 @@ public:
 	}
 
 	//Vous pouvez ajoutez d'autres méthodes publiques si vous sentez leur nécessité
+	std::vector<size_t> listerSommetsAdjacentsInverse(size_t sommet) const;
 
 private:
 

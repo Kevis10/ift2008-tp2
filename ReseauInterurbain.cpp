@@ -73,25 +73,20 @@ namespace TP2
 	*/
 
 	std::vector<std::vector<std::string> > ReseauInterurbain::algorithmeKosaraju(){
-		std::vector<bool> visite(unReseau.getNombreSommets(),false);
-		std::vector<size_t> parcours_profondeur;
-		for(size_t index=0; index < unReseau.getNombreSommets(); index++){
-			if(!visite[index]){
-				for(auto noeud : _parcoursProfondeur(index, visite)){
-					parcours_profondeur.push_back(noeud);
-				}
-			}
-		}
+
+		std::vector<size_t> parcours_profondeur = _parcoursCompletProfondeur();
 
 		std::reverse(parcours_profondeur.begin(),parcours_profondeur.end());
 		std::vector<std::vector<std::string> > composantes;
-		visite = std::vector<bool>(unReseau.getNombreSommets(),false);
+		std::vector<bool> visite(unReseau.getNombreSommets(),false);
 
-		for(size_t index=0; index < unReseau.getNombreSommets(); index++){
+
+
+		for(auto index: parcours_profondeur){
 			std::vector<std::string> composante_fortement_connexe;
 
 			if(!visite[index]){
-					for(auto noeud : _parcoursProfondeur(index, visite)){
+					for(auto noeud : _parcoursProfondeur(index, visite,true)){
 						composante_fortement_connexe.push_back(std::to_string(noeud));
 					}
 					composantes.push_back(composante_fortement_connexe);
@@ -103,19 +98,30 @@ namespace TP2
 		return composantes;
 	}
 
+	std::vector<size_t> ReseauInterurbain::_parcoursCompletProfondeur() const {
+		std::vector<size_t> parcours_profondeur;
+		std::vector<bool> visite(unReseau.getNombreSommets(),false);
+		for(size_t index=0; index < unReseau.getNombreSommets(); index++){
+			if(!visite[index]){
+				for(auto noeud : _parcoursProfondeur(index, visite,false)){
+					parcours_profondeur.push_back(noeud);
+				}
+			}
+		}
+		return parcours_profondeur;
+	}
 
-	std::vector<size_t> ReseauInterurbain::_parcoursProfondeur(size_t source, std::vector<bool> & visite) const {
+	std::vector<size_t> ReseauInterurbain::_parcoursProfondeur(size_t source, std::vector<bool> & visite, bool reverse) const {
 		ASSERTION(source < unReseau.getNombreSommets());
 
 		std::vector<size_t> resultat;
 		std::stack<size_t> pile;
-		resultat = _parcours(source, pile, visite);
+		resultat = _parcours(source, pile, visite, reverse);
 
 		return resultat;
 	}
 
-
-	std::vector<size_t> ReseauInterurbain::_parcours(size_t source, std::stack<size_t> & container, std::vector<bool> & visite) const {
+	std::vector<size_t> ReseauInterurbain::_parcours(size_t source, std::stack<size_t> & container, std::vector<bool> & visite, bool reverse) const {
 		//CODE TRES FORTEMENT INSPIRE DES LABORATOIRES :)
 
 		ASSERTION(source < unReseau.getNombreSommets());
@@ -138,7 +144,13 @@ namespace TP2
 			resultat.push_back(prochain);
 
 			// On liste les sommets adjacents du sommet de départ.
-			std::vector<size_t> adjacents = unReseau.listerSommetsAdjacents(prochain);
+			std::vector<size_t> adjacents;
+			if(!reverse){
+				adjacents = unReseau.listerSommetsAdjacents(prochain);
+			}else{
+				adjacents = unReseau.listerSommetsAdjacentsInverse(prochain);
+			}
+
 
 			// Pour chaque sommet adjacent non visité, on l'ajoute à la pile de
 			// sommets à visiter.

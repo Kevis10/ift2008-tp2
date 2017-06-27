@@ -189,4 +189,16 @@ namespace TP2
 	}
 
 
+	std::vector<size_t> Graphe::listerSommetsAdjacentsInverse(size_t sommet) const{
+		std::vector<size_t> adjacence_inverse;
+		for(size_t numero_sommet=0; numero_sommet < listesAdj.size(); numero_sommet++){
+			for(auto arc: listesAdj[numero_sommet]){
+				if(arc.destination==sommet){
+					adjacence_inverse.push_back(numero_sommet);
+				}
+			}
+		}
+		return adjacence_inverse;
+	}
+
 }//Fin du namespace

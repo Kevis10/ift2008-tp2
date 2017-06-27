@@ -15,6 +15,7 @@
 #include <stdexcept>
 #include <climits>
 #include <vector>
+#include <stack>
 #include <list>
 //vous pouvez inclure d'autres librairies de la STL si vous pensez les utiliser
 
@@ -75,6 +76,12 @@ private:
 
 	Graphe unReseau;			//Le type ReseauRoutier est composé d'un graphe
 	std::string nomReseau;		// Le nom du reseau (exemple: Orleans Express)
+
+
+	std::vector<size_t> _parcoursProfondeur(size_t source, std::vector<bool> & visite) const;
+	std::vector<size_t> _parcours(size_t source, std::stack<size_t> & container, std::vector<bool> & visite) const;
+
+
 
 	// Vous pouvez définir des constantes ici. À vous de voir!
 

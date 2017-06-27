@@ -169,7 +169,7 @@ namespace TP2
 
 			if(!visite[index]){
 					for(auto noeud : _parcoursProfondeur(index, visite,true)){
-						composante_fortement_connexe.push_back(std::to_string(noeud));
+						composante_fortement_connexe.push_back(unReseau.getNomSommet(noeud));
 					}
 					composantes.push_back(composante_fortement_connexe);
 				}

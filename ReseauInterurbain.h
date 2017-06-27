@@ -72,14 +72,15 @@ public:
 	std::vector<std::vector<std::string> > algorithmeKosaraju();
 
 	//Vous pouvez ajoutez d'autres méthodes publiques si vous sentez leur nécessité
-
-	std::vector<size_t> _parcoursProfondeur(size_t source, std::vector<bool> & visite, bool reverse) const;
-	std::vector<size_t> _parcoursCompletProfondeur() const;
-	std::vector<size_t> _parcours(size_t source, std::stack<size_t> & container, std::vector<bool> & visite, bool reverse) const;
 	float getAmountToTravel(size_t source, size_t destination, bool dureeCout) const;
 
 
 private:
+
+	std::vector<size_t> _parcoursProfondeur(size_t source, std::vector<bool> & visite, bool reverse) const;
+	std::vector<size_t> _parcoursCompletProfondeur() const;
+	std::vector<size_t> _parcours(size_t source, std::stack<size_t> & container, std::vector<bool> & visite, bool reverse) const;
+
 
 	Graphe unReseau;			//Le type ReseauRoutier est composé d'un graphe
 	std::string nomReseau;		// Le nom du reseau (exemple: Orleans Express)
